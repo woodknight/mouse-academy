@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="鼠标学院：节奏紧凑的鼠标点击练习小游戏。" />
+    <title>鼠标学院 | 点击练习</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <main class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="./" data-i18n-aria-label="brandHome" aria-label="鼠标学院主页">
+                <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span data-i18n="brand">鼠标学院</span>
+            </a>
+            <p class="session-label" data-i18n="sessionLabel">点击反应训练</p>
+            <div class="best-score"><span data-i18n="bestScore">个人最佳</span><strong id="best-score">--</strong></div>
+        </header>
+
+        <section class="game-layout" data-i18n-aria-label="gameArea" aria-label="点击练习游戏">
+            <aside class="game-intro">
+                <p class="eyebrow" data-i18n="focusDrill">01 / 专注训练</p>
+                <h1><span data-i18n="headline">瞄准</span><br /><em data-i18n="headlineEmphasis">这一刻。</em></h1>
+                <p class="intro-copy" data-i18n="introCopy">在设定时间内点击出现的靶心。目标会越来越快，保持节奏，别点空。</p>
+
+                <div class="mode-picker" role="group" data-i18n-aria-label="difficultyGroup" aria-label="选择难度">
+                    <p data-i18n="difficulty">训练强度</p>
+                    <div class="mode-options">
+                        <button class="mode-button is-selected" type="button" data-mode="steady"
+                            data-i18n="steady">稳定</button>
+                        <button class="mode-button" type="button" data-mode="swift" data-i18n="swift">迅捷</button>
+                        <button class="mode-button" type="button" data-mode="blitz" data-i18n="blitz">极限</button>
+                    </div>
+                </div>
+
+                <div class="duration-picker" role="group" data-i18n-aria-label="durationGroup" aria-label="选择训练时长">
+                    <p data-i18n="duration">训练时长</p>
+                    <div class="duration-options">
+                        <button class="duration-button is-selected" type="button" data-duration="30000"
+                            data-i18n="duration30">30 秒</button>
+                        <button class="duration-button" type="button" data-duration="60000" data-i18n="duration60">60
+                            秒</button>
+                        <button class="duration-button" type="button" data-duration="120000" data-i18n="duration120">120
+                            秒</button>
+                        <button class="duration-button" type="button" data-duration="infinite"
+                            data-i18n="unlimited">无限</button>
+                    </div>
+                </div>
+
+                <div class="language-picker" role="group" data-i18n-aria-label="languageGroup" aria-label="选择界面语言">
+                    <p data-i18n="language">界面语言</p>
+                    <div class="language-options">
+                        <button class="language-button is-selected" type="button" data-language="zh-CN">中文</button>
+                        <button class="language-button" type="button" data-language="en-US">English</button>
+                    </div>
+                </div>
+
+                <button id="start-button" class="start-button" type="button">
+                    <span class="start-icon" aria-hidden="true"></span>
+                    <span data-i18n="start">开始训练</span>
+                </button>
+                <button id="end-button" class="end-button" type="button" hidden><span aria-hidden="true"></span><span
+                        data-i18n="end">结束训练</span></button>
+                <p id="session-hint" class="shortcut-hint">已选 30 秒</p>
+            </aside>
+
+            <section id="arena" class="arena" data-i18n-aria-label="arena" aria-label="游戏区域" tabindex="0">
+                <div class="arena-grid" aria-hidden="true"></div>
+                <div id="idle-message" class="idle-message">
+                    <span class="idle-ring" aria-hidden="true"></span>
+                    <strong data-i18n="ready">准备好了吗？</strong>
+                    <span data-i18n="readyHint">选择设置后开始训练</span>
+                </div>
+                <button id="target" class="target" type="button" data-i18n-aria-label="targetPrompt" aria-label="点击目标"
+                    hidden>
+                    <span id="target-animal" class="target-animal" aria-hidden="true">🐱</span>
+                </button>
+                <div id="burst-layer" class="burst-layer" aria-hidden="true"></div>
+                <div class="arena-corner corner-top-left" aria-hidden="true"></div>
+                <div class="arena-corner corner-bottom-right" aria-hidden="true"></div>
+            </section>
+
+            <aside class="scoreboard" data-i18n-aria-label="scoreboard" aria-label="本局数据">
+                <div class="timer-card">
+                    <span id="time-label" class="metric-label" data-i18n="timeRemaining">剩余时间</span>
+                    <strong id="time-remaining" class="timer-value">30.0</strong>
+                    <span id="time-unit" class="timer-unit" data-i18n="seconds">秒</span>
+                    <div class="time-track" aria-hidden="true"><span id="time-progress"></span></div>
+                </div>
+
+                <dl class="metrics">
+                    <div>
+                        <dt data-i18n="hits">命中</dt>
+                        <dd id="hit-count">0</dd>
+                    </div>
+                    <div>
+                        <dt data-i18n="misses">失误</dt>
+                        <dd id="miss-count">0</dd>
+                    </div>
+                    <div>
+                        <dt data-i18n="accuracy">准确率</dt>
+                        <dd id="accuracy">--</dd>
+                    </div>
+                    <div>
+                        <dt data-i18n="streak">连击</dt>
+                        <dd id="streak-count">0</dd>
+                    </div>
+                </dl>
+
+                <div class="score-card">
+                    <span class="metric-label" data-i18n="currentScore">当前得分</span>
+                    <strong id="score">0000</strong>
+                    <span id="score-status">等待开始</span>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <div id="result-modal" class="result-modal" hidden role="dialog" aria-modal="true" aria-labelledby="result-title">
+        <div class="result-panel">
+            <p class="eyebrow" data-i18n="trainingComplete">训练完成</p>
+            <h2 id="result-title" data-i18n="resultTitle">训练结束</h2>
+            <p id="result-summary">你的专注力正在升温。</p>
+            <div class="result-score"><span data-i18n="finalScore">最终得分</span><strong id="final-score">0000</strong>
+            </div>
+            <div class="result-stats"><span><b id="final-hits">0</b> <span data-i18n="hits">命中</span></span><span><b
+                        id="final-accuracy">0%</b> <span data-i18n="accuracy">准确率</span></span></div>
+            <button id="play-again-button" class="start-button" type="button"><span class="start-icon"
+                    aria-hidden="true"></span><span data-i18n="playAgain">再来一局</span></button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
